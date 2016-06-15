@@ -1,0 +1,15 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="content">
+    <form action="{:U('Index/Category/addDo')}" method="post">
+        <table class="table">
+            <tr>
+                <th>类别名称</th>
+                <td><input type="text" name="name" value="" /></td>
+            </tr>
+        </table>
+        <tr>
+                <input type="submit" value="保存新增"/>
+        </tr>
+    </form>
+</block>

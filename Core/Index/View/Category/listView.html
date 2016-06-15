@@ -1,0 +1,28 @@
+<extend name="Base:base" />
+<block name="head">
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/js/jquery-ui-1.10.4.custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery-ui-1.10.4.custom.css" />
+</block>
+<block name="title">{$title}</block>
+<block name="content">
+    <div id="content">
+        <table class="table">
+            <tr>
+                <th>id</th>
+                <th>笔记类别名称</th>
+                <th>操作</th>
+            </tr>
+            <foreach name="categories" item="category">
+                <tr>
+                        <td>[<a href="{:U('Index/Category/view',array('id'=>$category['id']))}">{$category.id}]</a></td>
+                        <td>{$category.name}</td>
+                        <td>【<a href="{:U('Index/Category/view',array('id'=>$category['id']))}">查看该类别所有笔记</a>】
+                        【<a href="{:U('Index/Category/edit',array('id'=>$category['id']))}">修改</a>】
+                        【<a onclick="return confirm('确认要删除笔记类别？这将会删除该类别下的所有笔记以及笔记所对应的附件');" href="{:U('Index/Category/delete',array('id'=>$category['id']))}">删除</a>】
+                        </td>
+                </tr>
+            </foreach>
+        </table>
+        <div class="digg">{$page}</div>
+    </div>
+</block>

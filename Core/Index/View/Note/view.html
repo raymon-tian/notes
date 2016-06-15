@@ -1,0 +1,35 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="content">
+            <table class="table">
+                <tr>
+                    <th>笔记id</th>
+                    <td>{$note.id}</td>
+                    <th>发布时间</th>
+                    <td>{$note.publish_time}</td>
+                </tr>
+                <tr>
+                    <th>笔记类型</th>
+                    <td>{$note.c_name}</td>
+                    <th>笔记标题</th>
+                    <td>{$note.title}</td>
+                </tr>
+                <tr>
+                    <th colspan="8">笔记内容</th>
+                </tr>
+                <tr>
+                    <td colspan="8">{$note.content}</td>
+                </tr>
+                <tr>
+                    <th colspan="8">附件下载</th>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                    <foreach name="appendixes" item="appendix">
+                        <a href="__ROOT__/Public/Appendix/{$appendix.location}">{$appendix.name}</a><br/>
+                    </foreach>
+                    </td>
+                </tr>
+            </table>
+        <a href="{:U('Index/note/listView')}">返回</a>
+</block>

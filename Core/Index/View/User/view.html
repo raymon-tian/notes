@@ -1,0 +1,25 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="content">
+<table class="table">
+    <form action="{:U('Index/User/editDo')}" method="post">
+        <tr>
+            <th>用户名</th>
+            <td><input type="text" style="width: 250px" value="{$user.name}" name="name"/></td>
+        </tr>
+        <tr>
+            <th>原密码</th>
+            <td><input type="password" style="width: 250px"  name="password"/></td>
+        </tr>
+        <tr>
+            <th>新密码</th>
+            <td><input type="password" style="width: 250px"  name="n_password"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="修改并保存" />
+            </td>
+        </tr>
+    </form>
+</table>
+</block>

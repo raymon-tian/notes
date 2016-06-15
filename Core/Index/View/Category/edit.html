@@ -1,0 +1,16 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="content">
+    <form action="{:U('Index/Category/editDo')}" method="post">
+        <table class="table">
+            <tr>
+                <th>页面ID</th>
+                <td>{$category.id}</td> 
+                <th>笔记类别名称</th>
+                <td><input type="text" name="name" value="{$category.name}" /></td>
+            </tr>
+        </table>
+        <input type="hidden" value="{$category.id}" name="id" />
+        <input type="submit" value="保存修改"/>
+    </form>
+</block>

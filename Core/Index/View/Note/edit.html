@@ -1,0 +1,76 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="head">
+    <script type="text/javascript">
+        function checkName(){
+            $.post('__URL__/deleteAppendix',{'username':$('#username').val()},function(data){
+                    data = eval("("+data+")");
+                    alert(data);
+                });
+        }
+    </script>
+</block>
+<block name="content">
+    <form action="{:U('Index/Note/addDo')}" enctype="multipart/form-data" method="post">
+        <table class="table">
+            <tr>
+                <th>笔记类型</th>
+                <td>
+                    <select name="c_id">
+                        <foreach name="categories" item="menu">
+                            <option value="{$menu.id}">{$menu.name}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <th>笔记标题</th>
+                <td> <input style="width: 300px" type="text" name="title"  value="{$note.title}" /></td>
+            </tr> 
+            <tr>
+                <th colspan="6">笔记内容</th>
+            </tr>
+        </table>
+            <!-- 加载编辑器的容器 -->
+            <script id="container" name="content" type="text/plain">{$note.content}</script>
+            <!-- 配置文件 -->
+            <script type="text/javascript" src="__ROOT__/Public/ueditor/ueditor.config.js"></script>
+            <!-- 编辑器源码文件 -->
+            <script type="text/javascript" src="__ROOT__/Public/ueditor/ueditor.all.js"></script>
+            <!-- 实例化编辑器 -->
+            <script type="text/javascript">
+                UE.getEditor('container', {
+                    "initialFrameWidth": "80%",
+                    "initialFrameHeight": 250,
+                });
+            </script>
+        <table class="table">
+            <tr>
+                <th colspan="6">已上传附件</th>
+                <td colspan="6">
+                    <foreach name="appendixes" item="appendix">
+                        <a href="__ROOT__/Public/Appendix/{$appendix.location}">{$appendix.name}</a>&nbsp
+                        <button onclick="deleteAppendix()">删除</button>&nbsp
+                    </foreach>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="6">上传资料</th>
+                <td>
+                    <input type="file" name="fileurl[]" multiple />
+                </td>
+                <th>保存新增</th>
+                <td> <input type="submit" value="请保存"/></td>
+            </tr> 
+        </table>
+        </form>
+        <table class="table">
+            <tr>
+                <th colspan="6">已上传附件</th>
+                <td>
+                    <foreach name="appendixes" item="appendix">
+                        <a href="__ROOT__/Public/Appendix/{$appendix.location}">{$appendix.name}</a>&nbsp
+                        <button onclick="deleteAppendix()">删除</button>&nbsp
+                    </foreach>
+                </td>
+            </tr>
+        </table>
+</block>

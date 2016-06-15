@@ -1,0 +1,26 @@
+<extend name="Base:base" />
+<block name="head">
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/js/jquery-ui-1.10.4.custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery-ui-1.10.4.custom.css" />
+</block>
+<block name="title">{$title}</block>
+<block name="content">
+    <div id="content">
+        <table class="table">
+            <tr>
+                <th>附件名称</th>
+                <th>所属笔记</th>
+                <th>操作</th>
+            </tr>
+            <foreach name="files" item="file">
+                <tr>
+                    <td><a href="__ROOT__/Public/Appendix/{$file.location}">{$file.name}</a></td>
+                    <td><a href="{:U('Index/Note/view',array('id'=>$file['n_id']))}">{$file.title}</a></td>  
+                     <td>
+                        【<a onclick="return confirm('确认要删除这份附件？');" href="{:U('Index/Appendix/delete',array('id'=>$file['id']))}" id="btn_delete">删除</a>】</td>
+                </tr>
+            </foreach>
+        </table>
+        <div class="digg">{$page}</div>
+    </div>
+</block>

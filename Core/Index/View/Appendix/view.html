@@ -1,0 +1,27 @@
+<extend name="Base:base" />
+<block name="title">{$title}</block>
+<block name="content">
+            <table class="table">
+                <tr>
+                    <th>资料ID</th>
+                    <td>{$file.id}</td>
+                    <th>产品名称</th>
+                    <td>{$file.name}</td>
+                    <th>所属类别</th>
+                    <td>{$file.file_type.name}</td>
+                </tr>
+                <tr>
+                    <th>添加时间</th>
+                    <td>{$file.create_time}</td>
+                    <th>修改时间</th>
+                    <td>{$file.update_time}</td>
+                    <th>是否显示</th>
+                    <td><if condition="$file.is_active eq 1">显示<else />不显示</if></td>  
+                </tr>
+                <tr>
+                    <th>资料路径</th>
+                    <td><a href="__ROOT__/Public/Uploads/Files/{$file.fileurl}">{$file.fileurl}</a></td> 
+                </tr>
+            </table>
+        <a href="{:U('Admin/Download/listView')}">返回</a>
+</block>
