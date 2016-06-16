@@ -77,6 +77,10 @@
 			}
 			$num = count($_FILES['fileurl']['name']);
 			if($flag){
+				$result = $note_model->add($data);
+				if(!$result){
+	 				$this->error("添加失败");
+	 			}
 				$config = array(
 					'maxSize' => 0,
 					'rootPath' => './Public/Appendix/',
@@ -89,10 +93,6 @@
 					$this->error($upload->getError());
 				}else{
 					//多文件上传
-					$result = $note_model->add($data);
-					if(!$result){
-	 					$this->error("添加失败");
-	 				}
 					$app = array();
 					for($i=0;$i<$num;++$i){
 						$app['n_id'] = intval($result);
@@ -139,23 +139,71 @@
 		}
 
 		/**
-		 * 执行编辑
+		 * 执行添加
 		 */
 		public function editDo(){
-			$data = I('post.');
-			$data['update_time'] = date('Y-m-d H:i:s');
-			$result = M('Notes')->save($data);
-			if($result){
-				$this->success('修改成功',U('Index/Note/listView'));
+			$flag;//是否进行了文件上传
+			$num;//上传文件的总数
+			$note_model = M('note');
+			$data = I('post.');//要写入到notes表中的数据结构
+			
+			if($_FILES['fileurl']['name'][0] === ""){
+				$flag = 0;
 			}else{
-				$this->error('修改失败');
+				$flag = 1;
 			}
+			$num = count($_FILES['fileurl']['name']);
+			if($flag){
+				$result = $note_model->save($data);
+				if(!$result){
+	 				$this->error("修改失败");
+	 			}
+				$config = array(
+					'maxSize' => 0,
+					'rootPath' => './Public/Appendix/',
+					'exts' => array('doc', 'docx', 'pdf', 'txt','rar','zip'),
+					'subName' => array('date', 'Ymd'),
+				);
+				$upload = new \Think\Upload($config); // 实例化上传类
+				$info = $upload->upload(array($_FILES['fileurl']));
+				if(!$info){
+					$this->error($upload->getError());
+				}else{
+					//多文件上传
+					$app = array();
+					for($i=0;$i<$num;++$i){
+						$app['n_id'] = $data['id'];
+						$app['name'] = $_FILES['fileurl']['name'][$i];
+						$fileurl = $info[$i]['savepath'] . $info[$i]['savename'];
+						$app['location'] = $fileurl;
+						$result2 = M('appendix')->add($app);
+						if(!$result){
+	 						$this->error("笔记修改成功，附件添加失败");
+	 					}
+					}
+					$this->success("修改成功", U('Index/Note/listView'));
+				}
+			}else{
+				//没有进行文件上传
+				$result = $note_model->save($data);
+				if($result){
+	 				$this->success("修改成功", U('Index/Note/listView'));
+	 			}else{
+	 				$this->error("修改失败");
+	 			}
+ 			}
 		}
 
+		//响应客户端ajax请求
 		public function deleteAppendix(){
-			//$id = I('get.id','','intval');
-			//dump($id);
-			$this->ajaxReturn('666666');
+			$a_id = I('post.a_id','','intval');
+			$n_id = I('post.n_id','','intval');
+			$appendix = M()->query("select * from appendix where id=$a_id");
+			M()->execute("delete from appendix where id=$a_id");
+			$file_name = "./Public/Appendix/" . $appendix[0]['location'];
+			unlink($file_name);
+			$result = M()->query("select * from appendix where n_id=$n_id");
+			$this->ajaxReturn($result);
 		}
 		/**
 		 * 删除笔记
@@ -163,6 +211,11 @@
 		public function delete(){
 			$id = I('get.id','','intval');
 			$map['id'] = $id;
+			$file_names = M()->query("select location from appendix where n_id=$id");
+			for($i=0;$i<count($file_names);++$i){
+				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
+				unlink($file_name);
+			}
 			$result = M('note')->where($map)->delete();
 			if($result){
 				$this->success('删除成功',U('Index/Note/listView'));

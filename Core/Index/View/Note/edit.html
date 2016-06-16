@@ -2,23 +2,41 @@
 <block name="title">{$title}</block>
 <block name="head">
     <script type="text/javascript">
-        function checkName(){
-            $.post('__URL__/deleteAppendix',{'username':$('#username').val()},function(data){
+        function deleteAppendix(value){
+            $.post('__URL__/deleteAppendix',{'a_id':value,'n_id':$("#note_id").attr("value")},function(data){
+                    /*
                     data = eval("("+data+")");
-                    alert(data);
+                    alert(value);
+                    alert();
+                    console.log(data['a_id']);
+                    $("#appendix").empty();
+                    for($i=0;$i<10;++$i){
+                        $("#appendix").append($i);
+                        console.log(data);
+                    }*/
+                    $("#appendix").empty();
+                    for($i=0;$i<data.length;++$i){
+                        $("#appendix").append("<a href='__ROOT__/Public/Appendix/"+data[$i]['location']+"'>"+data[$i]['name']+"</a>");
+                        $("#appendix").append("<button onclick='deleteAppendix(this.value)' value='"+data[$i]['id']+"'>删除</button>");
+                        //console.log(data[$i]);
+                    }
                 });
         }
     </script>
 </block>
 <block name="content">
-    <form action="{:U('Index/Note/addDo')}" enctype="multipart/form-data" method="post">
+    <form action="{:U('Index/Note/editDo')}" enctype="multipart/form-data" method="post">
         <table class="table">
             <tr>
                 <th>笔记类型</th>
                 <td>
                     <select name="c_id">
-                        <foreach name="categories" item="menu">
-                            <option value="{$menu.id}">{$menu.name}</option>
+                        <foreach name="categories" item="category">
+                            <if condition="$category['id'] eq $note['c_id']">
+                                <option selected="selected" value="{$category.id}">{$category.name}</option>
+                            <else/>
+                                <option value="{$category.id}">{$category.name}</option>
+                            </if>
                         </foreach>
                     </select>
                 </td>
@@ -43,7 +61,7 @@
                 });
             </script>
         <table class="table">
-            <tr>
+            <!-- <tr>
                 <th colspan="6">已上传附件</th>
                 <td colspan="6">
                     <foreach name="appendixes" item="appendix">
@@ -51,7 +69,8 @@
                         <button onclick="deleteAppendix()">删除</button>&nbsp
                     </foreach>
                 </td>
-            </tr>
+            </tr> -->
+            <input id="note_id" type="hidden" name="id" value="{$note.id}"/>
             <tr>
                 <th colspan="6">上传资料</th>
                 <td>
@@ -65,10 +84,10 @@
         <table class="table">
             <tr>
                 <th colspan="6">已上传附件</th>
-                <td>
+                <td id="appendix">
                     <foreach name="appendixes" item="appendix">
                         <a href="__ROOT__/Public/Appendix/{$appendix.location}">{$appendix.name}</a>&nbsp
-                        <button onclick="deleteAppendix()">删除</button>&nbsp
+                        <button onclick="deleteAppendix(this.value)" value="{$appendix.id}">删除</button>
                     </foreach>
                 </td>
             </tr>
