@@ -1,0 +1,52 @@
+$.ajax({
+ type:"post", //请求的方式 
+      dataType:"json", //数据的格式 建议大家使用json格式 
+      data:{'curtheme':curtheme}, //请求的数据 
+      url:"http://www.xiaohigh.com/ajax", //请求的url地址 
+      success:function(data){ //请求成功时，处理返回来的数据 
+      var themeName=data.data; $("#curtheme").html(themeName); 
+      } 
+})
+
+=========================
+thinkphp+ajax局部刷新点赞
+
+public function zan(){
+        $data['id']=isset($_POST['id'])?intval(trim($_POST['id'])):0;
+        $obj = M("Article");
+ 
+        if(!isset($_COOKIE[$_POST['id']+10000])&&$obj->where($data)->setInc('zan')){
+            $cookiename = $_POST['id']+10000;
+            setcookie($cookiename,40,time()+60,'/'); 
+ 
+            $data['info'] = "ok";
+            $data['status'] = 1;
+            $this->ajaxReturn($data);
+             
+            exit();
+        }else{
+            $data['info'] = "fail";
+            $data['status'] = 0;
+            $this->ajaxReturn($data);
+            exit();
+        }
+         
+    }
+
+$(".z").on('click',function(){
+        var Oa=$(this);
+        var id=Oa.attr('id');//获取id属性
+        var vl=Oa.find("span").text();
+            vl=parseInt(vl)+1;
+        $.post('__CONTROLLER__/zan',{id:id},function(data){
+            if(data.status==1){ 
+                alert('感谢您的支持！');//模拟异步数据加1
+                Oa.find("span").text(vl);//页面元素加1
+            }else{
+                alert('您已经点过赞了,不要重复哦！');
+            }
+        },'json'); 
+    })
+
+<a class="z" id="<{$list.id}>" href="javascript:void(0);">赞<span><{$list.zan}></span></a>
+
