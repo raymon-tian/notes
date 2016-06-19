@@ -54,8 +54,9 @@
 		 * 添加笔记
 		 */
 		public function add(){
+			$uid = $GLOBALS['uid'];
 			$this->title = '添加笔记';
-			$this->types_note = M()->query('select id,name from category');
+			$this->types_note = M()->query("select id,name from category where u_id=$uid");
 			$this->display();
 		}
 
@@ -95,6 +96,7 @@
 					//多文件上传
 					$app = array();
 					for($i=0;$i<$num;++$i){
+						$app['u_id'] = $data['u_id'];
 						$app['n_id'] = intval($result);
 						$app['name'] = $_FILES['fileurl']['name'][$i];
 						$fileurl = $info[$i]['savepath'] . $info[$i]['savename'];
@@ -124,12 +126,13 @@
 		public function edit(){
 			$this->title = '编辑笔记';
 			$id = I('get.id','','intval');//笔记的id
+			$uid = $GLOBALS['uid'];
 			$result = M()->query("select * from note where id=$id");
 			$result = $result[0];
 			if(!$result){
 				$this->error('您要编辑的笔记不存在');
 			}else{
-				$this->categories = M()->query("select * from category");
+				$this->categories = M()->query("select * from category where u_id=$uid");
 				$result['content'] = htmlspecialchars_decode(stripslashes($result['content']));
 				$this->appendixes = M()->query("select id,name,location from appendix where n_id=$id");
 				//dump($this->appendixes);die;
@@ -198,11 +201,12 @@
 		public function deleteAppendix(){
 			$a_id = I('post.a_id','','intval');
 			$n_id = I('post.n_id','','intval');
-			$appendix = M()->query("select * from appendix where id=$a_id");
+			$u_id = $GLOBALS['uid'];
+			$appendix = M()->query("select * from appendix where id=$a_id and u_id=$u_id");
 			M()->execute("delete from appendix where id=$a_id");
 			$file_name = "./Public/Appendix/" . $appendix[0]['location'];
 			unlink($file_name);
-			$result = M()->query("select * from appendix where n_id=$n_id");
+			$result = M()->query("select * from appendix where n_id=$n_id and u_id=$u_id");
 			$this->ajaxReturn($result);
 		}
 		/**
@@ -210,8 +214,9 @@
 		 */
 		public function delete(){
 			$id = I('get.id','','intval');
+			$uid = $GLOBALS['uid'];
 			$map['id'] = $id;
-			$file_names = M()->query("select location from appendix where n_id=$id");
+			$file_names = M()->query("select location from appendix where n_id=$id and u_id=$uid");
 			for($i=0;$i<count($file_names);++$i){
 				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
 				unlink($file_name);

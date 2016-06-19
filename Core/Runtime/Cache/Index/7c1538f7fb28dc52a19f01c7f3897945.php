@@ -7,6 +7,7 @@
    <script src="/notes/Public/Index/js/jquery-3.0.0.min.js"></script> 
    <script type="text/javascript" src="/notes/Public/Index/js/bootstrap.min.js"></script>
    
+
 </head>
 <body>
 <!-- class="container" 总共可以容纳12列 -->
@@ -49,6 +50,31 @@
 </div>
 <div class="col-md-10">
 
+    <div id="content">
+        <table class="table">
+            <tr>
+                <th>id</th>
+                <th>标题</th>
+                <th>笔记类别</th>
+                <th>发布时间</th>
+                <th>操作</th>
+            </tr>
+            <?php if(is_array($notes)): foreach($notes as $key=>$note): ?><tr>
+                    <td>
+                    [<a href="<?php echo U('Index/note/view',array('id'=>$note['id']));?>"><?php echo ($note["id"]); ?></a>]
+                    </td>
+                    <td><?php echo ($note["title"]); ?></td>
+                    <td><?php echo ($note["c_name"]); ?></td>
+                    <td><?php echo ($note["publish_time"]); ?></td>
+                    <td>
+                        【<a href="<?php echo U('Index/note/view',array('id'=>$note['id']));?>">查看</a>】
+                        【<a href="<?php echo U('Index/note/edit',array('id'=>$note['id']));?>">修改</a>】
+                        【<a onclick="return confirm('确认要删除该文章？');" href="<?php echo U('Index/note/delete',array('id'=>$note['id']));?>" >删除</a>】
+                    </td>
+                </tr><?php endforeach; endif; ?>
+        </table>
+        <div class="digg"><?php echo ($page); ?></div>
+    </div>
 
 </div>
 </div>

@@ -1,38 +1,54 @@
 <?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
-    <link rel="stylesheet" type="text/css" href="/notes/Public/Index/css/public.css" />
-    <link rel="stylesheet" type="text/css" href="/notes/Public/Index/css/index.css" />
-    <link rel="stylesheet" type="text/css" href="/notes/Public/Index/css/page.css" />
-    <script type="text/javascript" src="/notes/Public/Index/js/jquery-1_10_2.js"></script>
-    
-    <head>
-        <title><?php echo ($title); ?></title>
-    </head>
-    <body>
-        <div id="top">
-            <div class="menu">
-                <a href="<?php echo U('Index/Category/add');?>">添加笔记类别</a>
-                <a href="<?php echo U('Index/Note/add');?>">添加笔记</a>
-            </div>
-            <div class="exit">
-                <a href="<?php echo U('Index/Index/logout');?>" target="_self">退出</a>
-                <a href="" target="_blank">获得帮助</a>
-                <a href="<?php echo (L("url")); ?>" target="_blank"><?php echo (L("web")); ?></a>
-            </div>
-        </div>
-        <div id="left">
-            <dl>
-                <dt>网站设置</dt>
-                <dd><a href="<?php echo U('Index/User/view');?>">用户信息修改</a></dd>
-                <dd><a href="<?php echo U('Index/Category/listView');?>">笔记类别管理</a></dd>
-                <dd><a href="<?php echo U('Index/Note/listView');?>">笔记&nbsp&nbsp管理</a></dd>
-                <dd><a href="<?php echo U('Index/Appendix/listView');?>">笔记附件管理</a></dd>
-            </dl>
-        </div>
-        <div id="right">
-            <h1><?php echo ($title); ?></h1><br/><br/>
-            
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
+   <title><?php echo ($title); ?></title>
+   <link href="/notes/Public/Index/css/bootstrap.min.css" rel="stylesheet">
+   <script src="/notes/Public/Index/js/jquery-3.0.0.min.js"></script> 
+   <script type="text/javascript" src="/notes/Public/Index/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+<!-- class="container" 总共可以容纳12列 -->
+<!-- <div class="container"> -->
+<div class ="row">
+<div class="col-md-12">
+<nav class="navbar navbar-inverse" role="navigation">
+   <div class="navbar-header">
+      <a class="navbar-brand" href="<?php echo U('Index/Index/index');?>">用户笔记管理系统</a>
+   </div>
+   <div>
+      <!-- 向左对齐 -->
+      <ul class="nav navbar-nav navbar-left">
+         <!-- class="active" -->
+         <li><a href="<?php echo U('Index/Category/add');?>">添加笔记类别</a></li>
+         <li><a href="<?php echo U('Index/Note/add');?>">添加笔记</a></li>
+      </ul>
+      <form action="<?php echo U('Index/Index/result');?>" method="post" class="navbar-form navbar-left" role="search">
+         <div class="form-group">
+            <input type="text" class="form-control" placeholder="搜索笔记" name="keywords">
+         </div>
+         <button type="submit" class="btn btn-default">搜索</button>
+      </form>    
+      <p class="navbar-text navbar-left">当前用户: <?php echo ($user["name"]); ?></p>
+      <a class="navbar-text navbar-left" href="<?php echo U('Index/Index/logout');?>" target="_self">退出</a>
+      <!-- <button type="button" class="btn btn-default navbar-btn" >退出</button> -->
+   </div>
+</nav>
+</div>
+</div>
+<div class ="row">
+<div class="col-md-2">
+<ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125">
+                <!-- class="active" -->
+                <li><a href="<?php echo U('Index/User/view');?>">用户信息修改</a></li>
+                <li><a href="<?php echo U('Index/Category/listView');?>">笔记类别管理</a></li>
+                <li><a href="<?php echo U('Index/Note/listView');?>">笔记&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp管理</a></li>
+                <li><a href="<?php echo U('Index/Appendix/listView');?>">笔记附件管理</a></li>
+</ul>
+</div>
+<div class="col-md-10">
+
     <form action="<?php echo U('Index/Note/addDo');?>" enctype="multipart/form-data" method="post">
         <table class="table">
             <tr>
@@ -74,6 +90,8 @@
         </table>
         </form>
 
-        </div>
-    </body>
+</div>
+</div>
+<!-- </div> -->
+</body>
 </html>

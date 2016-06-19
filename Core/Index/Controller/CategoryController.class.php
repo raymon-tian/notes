@@ -12,10 +12,12 @@
 		 */
 		public function listView (){
 			$this->title = '笔记类别列表';
+			$uid = $GLOBALS['uid'];
+			$where['u_id'] = $uid;
 			$category_model = M('category');
 			$p = I('get.p',1,'intval');
 			$count = $category_model->count();
-			$list = $category_model->page($p . ',8')->select();
+			$list = $category_model->page($p . ',8')->where($where)->select();
 			$Page = new \Think\Page($count,8);//实例化分页类
 			$Page->setConfig('header','个类别');
 			$Page->setConfig('prev','上一页');
@@ -55,6 +57,8 @@
 		 */
 		public function addDo (){
 			$data = I('post.');
+			$uid = $GLOBALS['uid'];
+			$data['u_id'] = $uid;
 			$result = M('category')->add($data);
 			if($result){
 				$this->success('添加成功',U('Index/category/listView'));
@@ -84,6 +88,7 @@
 		 */
 		public function editDo (){
 			$data = I('post.');
+			$data['u_id'] = $GLOBALS['uid'];
 			$result = M('category')->save($data);
 			if($result){
 				$this->success('修改成功',U('Index/Category/listView'));
@@ -105,7 +110,7 @@
 				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
 				unlink($file_name);
 			}
-			$result = M()->execute("delete from category where id=$id");
+			$result = M()->execute("delete from category where id=$id and u_id=$u_id");
 			if($result){
 				$this->success('删除成功',U('Index/Category/listView'));
 			} else{

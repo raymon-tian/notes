@@ -20,6 +20,8 @@ class CommonController extends Controller {
 			$this->redirect('Index/Login/index');
 		}
 		$uid = $_SESSION[C('USER_AUTH_KEY')];
+		$user = M()->query("select name from user where id=$uid");
+		$this->user = $user[0];
 		$GLOBALS['uid'] = $uid; 
 	}
 }

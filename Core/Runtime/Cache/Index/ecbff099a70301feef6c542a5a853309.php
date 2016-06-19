@@ -49,6 +49,18 @@
 </div>
 <div class="col-md-10">
 
+    <form action="<?php echo U('Index/Category/editDo');?>" method="post">
+        <table class="table">
+            <tr>
+                <th>页面ID</th>
+                <td><?php echo ($category["id"]); ?></td> 
+                <th>笔记类别名称</th>
+                <td><input type="text" name="name" value="<?php echo ($category["name"]); ?>" /></td>
+            </tr>
+        </table>
+        <input type="hidden" value="<?php echo ($category["id"]); ?>" name="id" />
+        <input type="submit" value="保存修改"/>
+    </form>
 
 </div>
 </div>

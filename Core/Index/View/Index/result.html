@@ -1,0 +1,33 @@
+<extend name="Base:base" />
+<block name="head">
+</block>
+<block name="title">{$title}</block>
+<block name="content">
+    <div id="content">
+        <table class="table">
+            <tr>
+                <th>id</th>
+                <th>标题</th>
+                <th>笔记类别</th>
+                <th>发布时间</th>
+                <th>操作</th>
+            </tr>
+            <foreach name="notes" item="note">
+                <tr>
+                    <td>
+                    [<a href="{:U('Index/note/view',array('id'=>$note['id']))}">{$note.id}</a>]
+                    </td>
+                    <td>{$note.title}</td>
+                    <td>{$note.c_name}</td>
+                    <td>{$note.publish_time}</td>
+                    <td>
+                        【<a href="{:U('Index/note/view',array('id'=>$note['id']))}">查看</a>】
+                        【<a href="{:U('Index/note/edit',array('id'=>$note['id']))}">修改</a>】
+                        【<a onclick="return confirm('确认要删除该文章？');" href="{:U('Index/note/delete',array('id'=>$note['id']))}" >删除</a>】
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+        <div class="digg">{$page}</div>
+    </div>
+</block>

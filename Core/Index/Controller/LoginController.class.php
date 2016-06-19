@@ -51,6 +51,19 @@ class LoginController extends Controller {
 		$verify = new \Think\Verify();
 		return $verify->check($code, $id);
 	}
+
+	function register(){
+		$username = I('username');
+		$pwd = I('password', '', 'md5');
+		$data['name'] = $username;
+		$data['password'] = $pwd;
+		$result = M('user')->add($data);
+		if($result){
+			$this->success('注册成功',U('Index/Login/index'));
+		}else{
+			$this->error("注册失败");
+		}
+	}
 }
 
 ?>

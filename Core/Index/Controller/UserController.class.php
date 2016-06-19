@@ -10,6 +10,7 @@ class UserController extends CommonController {
 	public function view(){
 		$uid = $GLOBALS['uid'];
 		$user = M()->query("select * from user where id=$uid");
+		$this->title="用户信息修改";
 		$this->user = $user[0];
 		$this->display();
 	}
