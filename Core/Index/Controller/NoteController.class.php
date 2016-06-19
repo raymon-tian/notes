@@ -28,7 +28,7 @@
 			$Page->setConfig('last','最后页');
 			$page = $Page->show();
 			$this->title = '笔记列表';
-			$this->page = $page;
+			// $this->page = $page;
 			$this->notes = $notes;
 			$this->display();
 		}
@@ -68,6 +68,7 @@
 			$num;//上传文件的总数
 			$note_model = M('note');
 			$data = I('post.');//要写入到notes表中的数据结构
+			if(!$data['c_id'])	$this->error("无笔记类别");
 			$data['publish_time'] = date('Y-m-d H:i:s');
 			$data['u_id'] = $_SESSION[C('USER_AUTH_KEY')];
 			

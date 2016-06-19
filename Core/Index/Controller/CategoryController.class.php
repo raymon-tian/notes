@@ -105,7 +105,7 @@
 			$id = I('get.id','','intval');
 			$c_id = $id;
 			$u_id = $GLOBALS['uid'];
-			$file_names = M()->query("select location from appendix,note where appendix.n_id=note.id and u_id=$u_id and c_id=$c_id");
+			$file_names = M()->query("select location from appendix,note where appendix.n_id=note.id and note.u_id=$u_id and c_id=$c_id");
 			for($i=0;$i<count($file_names);++$i){
 				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
 				unlink($file_name);
