@@ -16,7 +16,7 @@
 			$where['u_id'] = $uid;
 			$category_model = M('category');
 			$p = I('get.p',1,'intval');
-			$count = $category_model->count();
+			$count = $category_model->where($where)->count();
 			$list = $category_model->page($p . ',8')->where($where)->select();
 			$Page = new \Think\Page($count,8);//实例化分页类
 			$Page->setConfig('header','个类别');
@@ -35,7 +35,7 @@
 		public function view (){
 			$uid = $GLOBALS['uid'];
 			$id = I('get.id','','intval');
-			$sql = "select id,title,publish_time from note where c_id=$id and u_id=$uid";
+			$sql = "select id,title,publish_time from note where c_id=$id";
 			$result = M()->query($sql);
 			if($result){
 				$this->notes = $result;
@@ -103,14 +103,12 @@
 		
 		public function delete (){
 			$id = I('get.id','','intval');
-			$c_id = $id;
-			$u_id = $GLOBALS['uid'];
-			$file_names = M()->query("select location from appendix,note where appendix.n_id=note.id and note.u_id=$u_id and c_id=$c_id");
+			$file_names = M()->query("select location from appendix,note,category where appendix.n_id=note.id and note.c_id=category.id and category.id=$id");
 			for($i=0;$i<count($file_names);++$i){
 				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
 				unlink($file_name);
 			}
-			$result = M()->execute("delete from category where id=$id and u_id=$u_id");
+			$result = M()->execute("delete from category where id=$id");
 			if($result){
 				$this->success('删除成功',U('Index/Category/listView'));
 			} else{

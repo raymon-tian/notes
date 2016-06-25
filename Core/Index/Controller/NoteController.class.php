@@ -16,9 +16,9 @@
 			$uid = $_SESSION[C('USER_AUTH_KEY')];
 			$note_model = M();
 			$p = I('get.p',1,'intval');//笔记页码参数
-			$count = $note_model->query('select count(*) count from note');
+			$count = $note_model->query("select count(*) count from category,note where note.c_id=category.id and category.u_id=$uid");
 			$count = intval($count[0]['count']);
-			$sql = "select note.id id,c_id,title,content,publish_time,category.name c_name from note,category where note.c_id=category.id  and note.u_id=$uid";
+			$sql = "select note.id id,c_id,title,content,publish_time,category.name c_name from note,category where note.c_id=category.id  and category.u_id=$uid";
 			$notes = $note_model->page($p.',8')->query($sql);
 			$Page = new \Think\Page($count,8);
 			$Page->setConfig('header','片笔记');
@@ -28,7 +28,7 @@
 			$Page->setConfig('last','最后页');
 			$page = $Page->show();
 			$this->title = '笔记列表';
-			// $this->page = $page;
+			$this->page = $page;
 			$this->notes = $notes;
 			$this->display();
 		}
@@ -70,7 +70,6 @@
 			$data = I('post.');//要写入到notes表中的数据结构
 			if(!$data['c_id'])	$this->error("无笔记类别");
 			$data['publish_time'] = date('Y-m-d H:i:s');
-			$data['u_id'] = $_SESSION[C('USER_AUTH_KEY')];
 			
 			if($_FILES['fileurl']['name'][0] === ""){
 				$flag = 0;
@@ -86,7 +85,7 @@
 				$config = array(
 					'maxSize' => 0,
 					'rootPath' => './Public/Appendix/',
-					'exts' => array('doc', 'docx', 'pdf', 'txt','rar','zip'),
+					'exts' => array('doc', 'docx', 'pdf', 'txt','rar','zip','c','html'),
 					'subName' => array('date', 'Ymd'),
 				);
 				$upload = new \Think\Upload($config); // 实例化上传类
@@ -97,7 +96,6 @@
 					//多文件上传
 					$app = array();
 					for($i=0;$i<$num;++$i){
-						$app['u_id'] = $data['u_id'];
 						$app['n_id'] = intval($result);
 						$app['name'] = $_FILES['fileurl']['name'][$i];
 						$fileurl = $info[$i]['savepath'] . $info[$i]['savename'];
@@ -136,7 +134,6 @@
 				$this->categories = M()->query("select * from category where u_id=$uid");
 				$result['content'] = htmlspecialchars_decode(stripslashes($result['content']));
 				$this->appendixes = M()->query("select id,name,location from appendix where n_id=$id");
-				//dump($this->appendixes);die;
 				$this->note = $result;
 				$this->display();
 			}
@@ -165,7 +162,7 @@
 				$config = array(
 					'maxSize' => 0,
 					'rootPath' => './Public/Appendix/',
-					'exts' => array('doc', 'docx', 'pdf', 'txt','rar','zip'),
+					'exts' => array('doc', 'docx', 'pdf', 'txt','rar','zip','c','html'),
 					'subName' => array('date', 'Ymd'),
 				);
 				$upload = new \Think\Upload($config); // 实例化上传类
@@ -203,11 +200,11 @@
 			$a_id = I('post.a_id','','intval');
 			$n_id = I('post.n_id','','intval');
 			$u_id = $GLOBALS['uid'];
-			$appendix = M()->query("select * from appendix where id=$a_id and u_id=$u_id");
+			$appendix = M()->query("select * from appendix where id=$a_id");
 			M()->execute("delete from appendix where id=$a_id");
 			$file_name = "./Public/Appendix/" . $appendix[0]['location'];
 			unlink($file_name);
-			$result = M()->query("select * from appendix where n_id=$n_id and u_id=$u_id");
+			$result = M()->query("select * from appendix where n_id=$n_id");
 			$this->ajaxReturn($result);
 		}
 		/**
@@ -217,7 +214,7 @@
 			$id = I('get.id','','intval');
 			$uid = $GLOBALS['uid'];
 			$map['id'] = $id;
-			$file_names = M()->query("select location from appendix where n_id=$id and u_id=$uid");
+			$file_names = M()->query("select location from appendix where n_id=$id");
 			for($i=0;$i<count($file_names);++$i){
 				$file_name = "./Public/Appendix/" . $file_names[$i]['location'];
 				unlink($file_name);

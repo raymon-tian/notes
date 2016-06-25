@@ -13,8 +13,8 @@ use Think\Controller;
  			$this->title = '笔记附件信息列表';
  			$p = I('get.p',1,'intval');
  			$uid = $GLOBALS['uid'];
- 			$list = M()->page($p . ',8')->query("select appendix.id id,appendix.name name,location,n_id,title from appendix,note where appendix.n_id=note.id and appendix.u_id=$uid");
- 			$count = M()->query("select count(*) count from appendix");
+ 			$list = M()->page($p . ',8')->query("select appendix.id id,appendix.name name,location,n_id,title from appendix,note,category where appendix.n_id=note.id and note.c_id=category.id and category.u_id=$uid");
+ 			$count = M()->query("select count(*) from appendix,note,category where appendix.n_id=note.id and note.c_id=category.id and category.u_id=$uid");
  			$count = intval($count[0]);
  			//实例化分页类
  			$Page = new \Think\Page($count,8);
@@ -36,7 +36,7 @@ use Think\Controller;
  		public function delete(){
  			$id = I('id','','intval');
  			$uid = $GLOBALS['uid'];
- 			$fileurl = M()->query("select location from appendix where id=$id and u_id=$uid");
+ 			$fileurl = M()->query("select location from appendix where id=$id");
  			$fileurl = $fileurl[0]['location'];
 			if ($fileurl) {
 				$file_name = "./Public/Appendix/" . $fileurl;
